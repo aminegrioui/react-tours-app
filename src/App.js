@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Loading from './loading'
+import Tours from './tours'
+
+const url = 'https://course-api.com/react-tours-project'
 
 function App() {
+  const [loading,setLoading]=React.useState(true)
+  const [tours,setTours]=React.useState([])
+  const removeItem = (id) =>{
+    const newList=tours.filter((tour) => tour.id !==id)
+    setTours(newList)
+  }
+  const fetchTours   = async () =>{
+    setLoading(true)
+    try{
+      const res= await fetch(url)
+      const toursjson= await res.json()
+      setLoading(false)
+      setTours(toursjson)
+    }catch(error){
+      setLoading(false)
+    }
+   
+  }
+  React.useEffect(() =>{
+    fetchTours()
+  },[])
+  if(loading) {
+       return <main><Loading></Loading>  </main>
+  }
+  if(tours.length === 0 ){
+    return  <main>
+       <div className='title'>
+         <h1>No Tours</h1>
+        <button className='btn' onClick={fetchTours}>Refrech</button>
+       </div>
+     </main>
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+     <main>
+           <Tours tours={tours} removeItem={removeItem} ></Tours>   
+  
+     </main>
+  )
+            
 }
 
 export default App;
