@@ -32,7 +32,7 @@ function App() {
   if(tours.length === 0 ){
     return  <main>
        <div className='title'>
-         <h1>No Tours</h1>
+         <h1>our Tours</h1>
         <button className='btn' onClick={fetchTours}>Refrech</button>
        </div>
      </main>
